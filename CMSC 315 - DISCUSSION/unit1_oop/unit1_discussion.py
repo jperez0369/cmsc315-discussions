@@ -27,6 +27,13 @@ class ParentClass:
     vehicle_type = "Vehicle"
 
     def __init__(self, brand, model):
+        # Check that the vehicle has a valid brand and model.
+        if not isinstance(brand, str) or not brand.strip():
+            raise ValueError("Brand must be a non-empty name.")
+
+        if not isinstance(model, str) or not model.strip():
+            raise ValueError("Model must be a non-empty name.")
+
         self.brand = brand
         self.model = model
 
@@ -50,18 +57,32 @@ class ChildClass(ParentClass):
     vehicle_category = "Car"
 
     def __init__(self, brand, model, year, features):
+        # Use the parent constructor for brand and model.
         super().__init__(brand, model)
-        self.year = year
-        self.features = features
 
+        # Check the year and features before saving them.
+        if not isinstance(year, int) or isinstance(year, bool) or year < 1886:
+            raise ValueError("Year must be a valid whole number (1886 or later).")
+
+        if not isinstance(features, list):
+            raise TypeError("Features must be a list.")
+
+        self.year = year
+        self.features = features.copy()
+
+    # Override the parent method to include the year.
     def display_info(self):
         return f"{super().display_info()}, Year: {self.year}"
 
     def show_features(self):
+        # Handle a car that has no features listed.
+        if not self.features:
+            return "Features: None listed"
+
         return f"Features: {', '.join(self.features)}"
 
     # TODO 6: Student-created extension.
-    # This extra method lets a car start its engine.
+    # This method simulates starting the car engine.
     def start_engine(self):
         return f"The {self.brand} {self.model} engine has started."
 
@@ -80,17 +101,28 @@ class ChildClass(ParentClass):
 def demonstrate_namespaces():
     print("\n=== Namespace Demonstration ===")
 
-    car1 = ChildClass("Toyota", "Camry", 2022, ["Bluetooth", "Camera"])
-    car2 = ChildClass("Honda", "Civic", 2023, ["Navigation"])
+    car1 = ChildClass(
+        "Toyota", "Camry", 2022, ["Bluetooth", "Camera"]
+    )
+
+    car2 = ChildClass(
+        "Honda", "Civic", 2023, ["Navigation"]
+    )
 
     print("Class variable through class:", ChildClass.vehicle_category)
-    print("Class variable through object:", car1.vehicle_category)
+    print("Same class variable through object:", car1.vehicle_category)
 
+    # Only the first car receives an owner attribute.
     car1.owner = "Jonathan"
 
     print("First car namespace:", car1.__dict__)
     print("Second car namespace:", car2.__dict__)
-    print("Class namespace keys:", list(ChildClass.__dict__.keys()))
+
+    print("Child class namespace keys:", list(ChildClass.__dict__.keys()))
+
+    # Check that the owner attribute belongs only to car1.
+    owner_test = "owner" in car1.__dict__ and "owner" not in car2.__dict__
+    print("Owner is only on first car:", owner_test)
 
 
 # TODO 4:
@@ -114,13 +146,69 @@ def demonstrate_copying():
     shallow = copy(original)
     deep = deepcopy(original)
 
-    # A shallow copy shares the same nested list as the original.
-    # A deep copy has its own separate nested list.
+    # A shallow copy shares the original object's features list.
+    # A deep copy creates a separate copy of the features list.
     original.features.append("Backup camera")
 
     print("Original features:", original.features)
     print("Shallow copy features:", shallow.features)
     print("Deep copy features:", deep.features)
+
+    print(
+        "Explanation: Shallow copy shares the features list; "
+        "deep copy keeps its own list."
+    )
+
+    # Check that both copying methods worked as expected.
+    assert shallow.features == original.features
+    assert deep.features != original.features
+
+
+# EXTRA TESTS AND EDGE CASES:
+# These tests check empty lists and invalid information.
+# They also demonstrate how errors are handled safely.
+
+def demonstrate_edge_cases():
+    print("\n=== Extra Tests and Edge Cases ===")
+
+    # Test 1: Create a car with an empty features list.
+    empty_car = ChildClass("Honda", "Fit", 2018, [])
+
+    print("Empty features test:", empty_car.show_features())
+
+    assert empty_car.show_features() == "Features: None listed"
+
+    # Test 2: Try creating a car with an empty brand.
+    try:
+        ChildClass("", "Civic", 2023, [])
+    except ValueError as error:
+        print("Invalid brand handled:", error)
+    else:
+        raise AssertionError("Empty brand should be rejected.")
+
+    # Test 3: Try using text instead of a list for features.
+    try:
+        ChildClass("Toyota", "Camry", 2022, "Bluetooth")
+    except TypeError as error:
+        print("Invalid features handled:", error)
+    else:
+        raise AssertionError("Non-list features should be rejected.")
+
+    # Test 4: Try creating a car with an invalid year.
+    try:
+        ChildClass("Ford", "Focus", 1800, [])
+    except ValueError as error:
+        print("Invalid year handled:", error)
+    else:
+        raise AssertionError("Invalid year should be rejected.")
+
+    # Test 5: Create another valid car object.
+    another_car = ChildClass(
+        "Mazda", "3", 2021, ["Radio"]
+    )
+
+    print("Extra object test:", another_car.display_info())
+    print("All extra tests passed.")
 
 
 # TODO 5:
@@ -137,10 +225,12 @@ def main():
     print("=== Unit 1 OOP Assignment ===")
 
     print("\n=== Parent Object ===")
+
     vehicle = ParentClass("Ford", "Truck")
     print(vehicle.display_info())
 
     print("\n=== Child Object ===")
+
     car = ChildClass(
         "Toyota", "Corolla", 2024, ["Bluetooth", "Backup camera"]
     )
@@ -151,6 +241,9 @@ def main():
 
     demonstrate_namespaces()
     demonstrate_copying()
+
+    # Run the additional tests and edge cases.
+    demonstrate_edge_cases()
 
 
 if __name__ == "__main__":
