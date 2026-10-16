@@ -9,7 +9,6 @@ You are provided with starter code containing TODO sections. Your task is to com
 analyze the code to demonstrate understanding of inheritance, namespaces, and object copying.
 """
 
-
 from copy import copy, deepcopy
 
 
@@ -25,7 +24,14 @@ from copy import copy, deepcopy
 # Replace the pass statement with your implementation.
 
 class ParentClass:
-    pass
+    vehicle_type = "Vehicle"
+
+    def __init__(self, brand, model):
+        self.brand = brand
+        self.model = model
+
+    def display_info(self):
+        return f"Brand: {self.brand}, Model: {self.model}"
 
 
 # TODO 2:
@@ -41,7 +47,23 @@ class ParentClass:
 # Replace the pass statement with your implementation.
 
 class ChildClass(ParentClass):
-    pass
+    vehicle_category = "Car"
+
+    def __init__(self, brand, model, year, features):
+        super().__init__(brand, model)
+        self.year = year
+        self.features = features
+
+    def display_info(self):
+        return f"{super().display_info()}, Year: {self.year}"
+
+    def show_features(self):
+        return f"Features: {', '.join(self.features)}"
+
+    # TODO 6: Student-created extension.
+    # This extra method lets a car start its engine.
+    def start_engine(self):
+        return f"The {self.brand} {self.model} engine has started."
 
 
 # TODO 3:
@@ -57,7 +79,18 @@ class ChildClass(ParentClass):
 
 def demonstrate_namespaces():
     print("\n=== Namespace Demonstration ===")
-    print("TODO: Implement namespace demonstration")
+
+    car1 = ChildClass("Toyota", "Camry", 2022, ["Bluetooth", "Camera"])
+    car2 = ChildClass("Honda", "Civic", 2023, ["Navigation"])
+
+    print("Class variable through class:", ChildClass.vehicle_category)
+    print("Class variable through object:", car1.vehicle_category)
+
+    car1.owner = "Jonathan"
+
+    print("First car namespace:", car1.__dict__)
+    print("Second car namespace:", car2.__dict__)
+    print("Class namespace keys:", list(ChildClass.__dict__.keys()))
 
 
 # TODO 4:
@@ -73,7 +106,21 @@ def demonstrate_namespaces():
 
 def demonstrate_copying():
     print("\n=== Copy Demonstration ===")
-    print("TODO: Implement shallow copy and deep copy demonstration")
+
+    original = ChildClass(
+        "Ford", "Focus", 2020, ["Radio", "Air conditioning"]
+    )
+
+    shallow = copy(original)
+    deep = deepcopy(original)
+
+    # A shallow copy shares the same nested list as the original.
+    # A deep copy has its own separate nested list.
+    original.features.append("Backup camera")
+
+    print("Original features:", original.features)
+    print("Shallow copy features:", shallow.features)
+    print("Deep copy features:", deep.features)
 
 
 # TODO 5:
@@ -89,9 +136,18 @@ def demonstrate_copying():
 def main():
     print("=== Unit 1 OOP Assignment ===")
 
-    print("\nTODO: Create and test your parent object")
+    print("\n=== Parent Object ===")
+    vehicle = ParentClass("Ford", "Truck")
+    print(vehicle.display_info())
 
-    print("\nTODO: Create and test your child object")
+    print("\n=== Child Object ===")
+    car = ChildClass(
+        "Toyota", "Corolla", 2024, ["Bluetooth", "Backup camera"]
+    )
+
+    print(car.display_info())
+    print(car.show_features())
+    print(car.start_engine())
 
     demonstrate_namespaces()
     demonstrate_copying()
