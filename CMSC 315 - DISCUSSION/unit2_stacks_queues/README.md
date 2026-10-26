@@ -2,35 +2,37 @@
 
 ## Overview
 
-This assignment explores two fundamental linear data structures:
+This assignment explored two important data structures in Python:
 
-- Stack (LIFO)
-- Queue (FIFO)
+- Stack (Last In, First Out)
+- Queue (First In, First Out)
 
 ## Learning Objectives
 
-- Implement stack operations
-- Implement queue operations
-- Understand LIFO and FIFO behavior
-- Create edge cases
+During this assignment, I learned how to:
 
-## Requirements
+- Create and use stacks and queues in Python.
+- Add, remove, and view items in both structures.
+- Understand the differences between LIFO and FIFO.
+- Handle empty stacks and queues.
+- Apply these concepts to a real-world situation.
 
-Complete all TODO sections:
+## Program Implementation
 
-1. Implement stack operations.
-2. Implement queue operations.
-3. Demonstrate LIFO behavior.
-4. Demonstrate FIFO behavior.
-5. Create and test edge cases.
-6. Create a real-world scenario.
+I completed the TODO sections in the Python starter code.
+
+For the stack, I used a Python list and implemented push, pop, peek, and is_empty methods. For the queue, I used collections.deque and implemented enqueue, dequeue, front, and is_empty methods.
+
+I created a technical support desk scenario. The queue managed incoming support tickets in the order they arrived, while the stack tracked actions so the most recent action could be removed first.
+
+I also added four items to each structure and demonstrated how they were removed. I included examples of empty structures and single-item structures to explain how the program handled these situations.
 
 ## Discussion Board Reflection
 
-After completing the programming assignment, add this reflection to your initial discussion post in LEO.
+This assignment helped me understand how stacks and queues work and why they are important in programming. Before working on this project, I understood the basic idea of organizing information, but I did not fully understand how the order of removing items could affect a program.
 
-Your reflection should be approximately 150–200 words and address the following questions:
+One thing I learned was that a stack uses Last In, First Out (LIFO), meaning the last item added is the first one removed. A good example is the undo feature in a computer program. A queue uses First In, First Out (FIFO), meaning the first item added is the first one removed. This is similar to customers waiting in line or support tickets being handled in order.
 
-1. What concepts or skills did you learn while completing this assignment?
-2. What challenges did you encounter, and how did you overcome them?
-3. Explain the differences between stacks and queues as this relates to real-world applications.
+One challenge was understanding how to handle empty stacks and queues without causing errors. I addressed this by checking whether the structure was empty before removing or viewing an item.
+
+Overall, this assignment helped me understand how choosing the correct data structure can make a program more organized, reliable, and efficient.
