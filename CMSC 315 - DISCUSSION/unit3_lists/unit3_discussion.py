@@ -1,3 +1,4 @@
+
 """
 ==================================================
 Unit 3 DISCUSSION: List Operations (Insert, Delete, Search)
@@ -22,7 +23,10 @@ def insert_at(lst, index, value):
     - Use comments to explain how insertion performance may vary depending on
       where the insertion occurs.
     """
-    pass
+    # Items at and after the insertion position shift to the right.
+    # Inserting at the beginning or middle takes O(n) time because
+    # existing elements must move. Inserting at the end is usually O(1).
+    lst.insert(index, value)
 
 
 def delete_at(lst, index):
@@ -36,7 +40,14 @@ def delete_at(lst, index):
     - Return None if the index is invalid.
     - Add comments explaining why index validation and safe deletion are important.
     """
-    pass
+    # Only allow valid non-negative indexes to avoid an IndexError.
+    # This also prevents accidentally deleting the wrong item.
+    if not isinstance(index, int) or index < 0 or index >= len(lst):
+        return None
+
+    # Removing an item shifts later elements one position left.
+    # Deleting near the beginning takes O(n) time.
+    return lst.pop(index)
 
 
 def search_value(lst, value):
@@ -49,7 +60,13 @@ def search_value(lst, value):
     - Return -1 if the value is not found.
     - Add comments explaining why this is a linear search and why it scans sequentially.
     """
-    pass
+    # Linear search checks each item in order, starting at index 0.
+    # It takes O(n) time in the worst case because it may scan all items.
+    for index, item in enumerate(lst):
+        if item == value:
+            return index
+
+    return -1
 
 
 def main():
@@ -70,7 +87,22 @@ def main():
     # 5. Use comments to explain each step in the implementation.
 
     print("\n=== INSERTION TESTS ===")
-    print("TODO: Create a list and demonstrate insertions.")
+
+    # This list represents customers waiting for service.
+    customers = ["John", "Maria", "David"]
+    print("Original list:", customers)
+
+    # Insert at the beginning.
+    insert_at(customers, 0, "Sarah")
+    print("After beginning insertion:", customers)
+
+    # Insert in the middle.
+    insert_at(customers, 2, "Alex")
+    print("After middle insertion:", customers)
+
+    # Insert at the end.
+    insert_at(customers, len(customers), "James")
+    print("After end insertion:", customers)
 
     # ===============================
     # TODO (Student): DELETION TESTS
@@ -86,7 +118,21 @@ def main():
     # 4. Use comments to clearly explain what is happening in the output.
 
     print("\n=== DELETION TESTS ===")
-    print("TODO: Demonstrate deletions from multiple positions.")
+
+    # Delete the first customer.
+    removed = delete_at(customers, 0)
+    print("Removed from beginning:", removed)
+    print("Updated list:", customers)
+
+    # Delete a customer from the middle.
+    removed = delete_at(customers, 2)
+    print("Removed from middle:", removed)
+    print("Updated list:", customers)
+
+    # Delete the last customer.
+    removed = delete_at(customers, len(customers) - 1)
+    print("Removed from end:", removed)
+    print("Updated list:", customers)
 
     # ===============================
     # TODO (Student): SEARCH TESTS
@@ -99,7 +145,15 @@ def main():
     # 4. Use comments to explain each step.
 
     print("\n=== SEARCH TESTS ===")
-    print("TODO: Demonstrate searching for values.")
+
+    # John is still in the list, so this search should return 0.
+    position = search_value(customers, "John")
+    print("John found at index:", position)
+
+    # Michael is not in the list, so this search should return -1.
+    position = search_value(customers, "Michael")
+    print("Michael search result:", position)
+    print("-1 means the customer was not found.")
 
     # ===============================
     # TODO (Student): EDGE CASES
@@ -115,8 +169,21 @@ def main():
     # - Use comments to explain each edge case.
 
     print("\n=== EDGE CASES ===")
-    print("TODO: Demonstrate at least two edge cases.")
 
+    # Invalid indexes return None instead of causing an error.
+    print("Invalid deletion:", delete_at(customers, 100))
+    print("Negative index deletion:", delete_at(customers, -1))
+
+    # Deleting from an empty list safely returns None.
+    empty_list = []
+    print("Delete from empty list:", delete_at(empty_list, 0))
+
+    # Inserting into an empty list works.
+    insert_at(empty_list, 0, "New Customer")
+    print("Insert into empty list:", empty_list)
+
+    # Searching for a missing value returns -1.
+    print("Missing customer:", search_value(empty_list, "Unknown"))
 
 
 if __name__ == "__main__":
